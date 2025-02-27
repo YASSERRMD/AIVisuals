@@ -1,0 +1,346 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diffusion Model for Image Generation</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #7209b7; /* Diffusion color */
+      --background: #f8f9fa;
+      --card-bg: #ffffff;
+      --text: #2b2d42;
+      --light-text: #6c757d;
+      --highlight: #4cc9f0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 800px;
+      padding: 2rem 1rem;
+      margin: 0 auto;
+    }
+    
+    .card {
+      border: none;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      background: var(--card-bg);
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+    
+    .card-body {
+      padding: 1.5rem;
+    }
+    
+    h1, h3, h4 {
+      font-weight: 700;
+    }
+    
+    .title-area {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .title-area h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .title-area p {
+      font-size: 1.25rem;
+      color: var(--light-text);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .animation-box {
+      background-color: #f7f7f9;
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1.5rem;
+    }
+    
+    .canvas-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 1rem 0;
+    }
+    
+    canvas {
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      width: 300px;
+      height: 200px;
+    }
+    
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+    
+    .btn-control {
+      border-radius: 50px;
+      padding: 0.5rem 1.25rem;
+      font-weight: 600;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-light {
+      background-color: #e9ecef;
+      color: var(--text);
+    }
+    
+    .step-counter {
+      font-size: 0.875rem;
+      color: var(--light-text);
+      font-weight: 500;
+    }
+    
+    .model-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    
+    .model-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.25rem;
+      background-color: var(--primary);
+    }
+    
+    .feature-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 1.5rem 0;
+    }
+    
+    .feature-list li {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 1rem;
+    }
+    
+    .feature-list li:before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: bold;
+      font-size: 1.25rem;
+    }
+    
+    .progress {
+      height: 6px;
+      border-radius: 3px;
+      margin-top: 0.5rem;
+    }
+    
+    .diff-progress .progress-bar {
+      background-color: var(--primary);
+    }
+    
+    .animation-prompt {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title-area">
+      <h1>How Diffusion Models Generate Images</h1>
+      <p>Watch a noisy image smoothly transform into a clear picture over 20 steps</p>
+    </div>
+    
+    <div class="card">
+      <div class="card-body">
+        <div class="model-title">
+          <div class="model-icon">DF</div>
+          <h3>Diffusion Model for Images</h3>
+        </div>
+        
+        <div class="animation-box">
+          <p class="animation-prompt">Prompt: "A sunny beach"</p>
+          <div class="canvas-container">
+            <canvas id="diff-canvas" width="300" height="200"></canvas>
+          </div>
+          
+          <div class="controls">
+            <div class="step-counter" id="diff-counter">Step: 0/20</div>
+            <div>
+              <button id="diff-reset" class="btn-control btn-light">Reset</button>
+              <button id="diff-play" class="btn-control btn-primary">Play</button>
+            </div>
+          </div>
+          
+          <div class="progress diff-progress">
+            <div id="diff-progress-bar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+          </div>
+        </div>
+        
+        <h4>How it works:</h4>
+        <ul class="feature-list">
+          <li>Starts with random noise (like static on a TV)</li>
+          <li>Smoothly refines the image over 20 steps</li>
+          <li>Uses the prompt to guide the denoising process</li>
+          <li>Creates a clear image from chaos, like revealing a hidden picture</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Canvas setup
+      const canvas = document.getElementById('diff-canvas');
+      const ctx = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+      
+      // Animation variables
+      const diffProgressBar = document.getElementById('diff-progress-bar');
+      const diffCounter = document.getElementById('diff-counter');
+      const diffPlay = document.getElementById('diff-play');
+      const diffReset = document.getElementById('diff-reset');
+      
+      let animationFrameId = null;
+      let diffStep = 0;
+      const diffTotalSteps = 20;
+      const animationDuration = 5000; // 5 seconds total
+      let startTime = null;
+      
+      // Noise buffer (generated once for consistency)
+      let noiseBuffer = null;
+      function generateNoise() {
+        const imageData = ctx.createImageData(width, height);
+        for (let i = 0; i < imageData.data.length; i += 4) {
+          const noise = Math.random() * 255;
+          imageData.data[i] = noise;     // Red
+          imageData.data[i + 1] = noise; // Green
+          imageData.data[i + 2] = noise; // Blue
+          imageData.data[i + 3] = 255;   // Alpha
+        }
+        return imageData;
+      }
+      
+      // Draw beach elements with smooth interpolation
+      function drawBeach(progress) {
+        // Clear canvas
+        ctx.clearRect(0, 0, width, height);
+        
+        // Draw noise (fading out)
+        if (!noiseBuffer) noiseBuffer = generateNoise();
+        ctx.putImageData(noiseBuffer, 0, 0);
+        ctx.fillStyle = `rgba(255, 255, 255, ${progress})`; // White overlay to fade noise
+        ctx.fillRect(0, 0, width, height);
+        
+        // Sky (blue, top half)
+        ctx.fillStyle = `rgba(135, 206, 235, ${progress})`;
+        ctx.fillRect(0, 0, width, height / 2);
+        
+        // Sand (yellow, bottom half)
+        ctx.fillStyle = `rgba(255, 215, 0, ${progress})`;
+        ctx.fillRect(0, height / 2, width, height / 2);
+        
+        // Sun (orange, top right)
+        ctx.fillStyle = `rgba(255, 165, 0, ${progress})`;
+        ctx.beginPath();
+        ctx.arc(width - 50, 50, 30, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      
+      // Initialize
+      function setupDiffusion() {
+        noiseBuffer = generateNoise();
+        ctx.putImageData(noiseBuffer, 0, 0);
+        diffStep = 0;
+        diffCounter.textContent = `Step: ${diffStep}/${diffTotalSteps}`;
+        diffProgressBar.style.width = '0%';
+        
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+        diffPlay.textContent = 'Play';
+        startTime = null;
+      }
+      
+      // Animation function
+      function animateDiffusion(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        const progress = Math.min(elapsed / animationDuration, 1); // 0 to 1 over 5s
+        
+        // Update step based on progress
+        diffStep = Math.floor(progress * diffTotalSteps);
+        diffCounter.textContent = `Step: ${diffStep}/${diffTotalSteps}`;
+        diffProgressBar.style.width = `${progress * 100}%`;
+        
+        // Draw with smooth interpolation
+        drawBeach(progress);
+        
+        if (progress < 1) {
+          animationFrameId = requestAnimationFrame(animateDiffusion);
+        } else {
+          animationFrameId = null;
+          diffPlay.textContent = 'Play';
+        }
+      }
+      
+      // Event listeners
+      diffPlay.addEventListener('click', function() {
+        if (!animationFrameId) {
+          startTime = null; // Reset start time
+          animationFrameId = requestAnimationFrame(animateDiffusion);
+          diffPlay.textContent = 'Pause';
+        } else {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+          diffPlay.textContent = 'Play';
+        }
+      });
+      
+      diffReset.addEventListener('click', setupDiffusion);
+      
+      // Start
+      setupDiffusion();
+    });
+  </script>
+</body>
+</html>
