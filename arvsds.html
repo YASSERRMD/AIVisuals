@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM Types Comparison</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #7209b7;
+      --background: #f8f9fa;
+      --card-bg: #ffffff;
+      --text: #2b2d42;
+      --light-text: #6c757d;
+      --highlight: #4cc9f0;
+      --success: #2dc653;
+    }
+    
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1140px;
+      padding: 2rem 1rem;
+    }
+    
+    .card {
+      border: none;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      background: var(--card-bg);
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+    
+    .card-body {
+      padding: 1.5rem;
+    }
+    
+    h1, h2, h3, h4, h5 {
+      font-weight: 700;
+    }
+    
+    .title-area {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .title-area h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .title-area p {
+      font-size: 1.25rem;
+      color: var(--light-text);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    .animation-box {
+      background-color: #f7f7f9;
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+      height: 250px;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1.5rem;
+    }
+    
+    .token-display {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+      min-height: 120px;
+      align-items: flex-start;
+    }
+    
+    .token {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 40px;
+      height: 40px;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      font-family: monospace;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .masked {
+      background-color: #e9ecef;
+      color: #adb5bd;
+      border: 2px dashed #adb5bd;
+    }
+    
+    .active {
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .arm-token {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .diff-token {
+      background-color: var(--secondary);
+      color: white;
+    }
+    
+    .prompt-token {
+      background-color: #6c757d;
+      color: white;
+    }
+    
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+    
+    .btn-control {
+      border-radius: 50px;
+      padding: 0.5rem 1.25rem;
+      font-weight: 600;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: white;
+    }
+    
+    .btn-light {
+      background-color: #e9ecef;
+      color: var(--text);
+    }
+    
+    .step-counter {
+      font-size: 0.875rem;
+      color: var(--light-text);
+      font-weight: 500;
+    }
+    
+    .model-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    
+    .model-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.25rem;
+    }
+    
+    .feature-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 1.5rem 0;
+    }
+    
+    .feature-list li {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 1rem;
+    }
+    
+    .feature-list li:before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: bold;
+      font-size: 1.25rem;
+    }
+    
+    .highlight-box {
+      padding: 1rem;
+      border-radius: 8px;
+      background-color: #f8f9fa;
+      border-left: 4px solid var(--highlight);
+      margin: 1.5rem 0;
+    }
+    
+    .progress {
+      height: 6px;
+      border-radius: 3px;
+      margin-top: 0.5rem;
+    }
+    
+    .arm-progress .progress-bar {
+      background-color: var(--primary);
+    }
+    
+    .diff-progress .progress-bar {
+      background-color: var(--secondary);
+    }
+    
+    .model-explainer {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      border-radius: 12px;
+      background-color: #f8f9fa;
+    }
+    
+    .simple-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+    }
+    
+    .simple-table th, .simple-table td {
+      padding: 1rem;
+      border-bottom: 1px solid #e9ecef;
+    }
+    
+    .simple-table th {
+      font-weight: 600;
+      text-align: left;
+      color: var(--light-text);
+    }
+    
+    .simple-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .animation-prompt {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    
+    .vs-tag {
+      display: inline-block;
+      padding: 0.25rem 1rem;
+      background-color: #e9ecef;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title-area">
+      <h1>How LLMs Generate Text</h1>
+      <p>Comparing traditional Autoregressive models with the new Diffusion approach (LLaDA)</p>
+    </div>
+    
+    <div class="row">
+      <!-- Autoregressive Model -->
+      <div class="col-lg-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="model-title">
+              <div class="model-icon" style="background-color: var(--primary);">AR</div>
+              <h3>Autoregressive Model</h3>
+            </div>
+            
+            <div class="animation-box">
+              <p class="animation-prompt">Prompt: "The sky is"</p>
+              <div class="token-display" id="arm-tokens"></div>
+              
+              <div class="controls">
+                <div class="step-counter" id="arm-counter">Step: 0/8</div>
+                <div>
+                  <button id="arm-reset" class="btn-control btn-light">Reset</button>
+                  <button id="arm-play" class="btn-control btn-primary">Play</button>
+                </div>
+              </div>
+              
+              <div class="progress arm-progress">
+                <div id="arm-progress-bar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <h4>How it works:</h4>
+            <ul class="feature-list">
+              <li>Generates one word at a time from left to right</li>
+              <li>Each new word only sees previous words</li>
+              <li>Works like completing someone's sentence</li>
+              <li>Used in most modern AI like ChatGPT and Gemini</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Diffusion Model -->
+      <div class="col-lg-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="model-title">
+              <div class="model-icon" style="background-color: var(--secondary);">DF</div>
+              <h3>Diffusion Model (LLaDA)</h3>
+            </div>
+            
+            <div class="animation-box">
+              <p class="animation-prompt">Prompt: "The sky is"</p>
+              <div class="token-display" id="diff-tokens"></div>
+              
+              <div class="controls">
+                <div class="step-counter" id="diff-counter">Step: 0/4</div>
+                <div>
+                  <button id="diff-reset" class="btn-control btn-light">Reset</button>
+                  <button id="diff-play" class="btn-control btn-secondary">Play</button>
+                </div>
+              </div>
+              
+              <div class="progress diff-progress">
+                <div id="diff-progress-bar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <h4>How it works:</h4>
+            <ul class="feature-list">
+              <li>Starts with placeholder masks for missing words</li>
+              <li>Fills in multiple words at once in each step</li>
+              <li>Can look at both left and right context</li>
+              <li>Better at tasks requiring bidirectional understanding</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Key Differences -->
+    <div class="card mt-4">
+      <div class="card-body">
+        <h3 class="mb-4">Key Differences Explained</h3>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="highlight-box">
+              <h5>Autoregressive (Traditional)</h5>
+              <p>Like writing a sentence one word at a time, never looking ahead.</p>
+              <p><strong>Example:</strong> GPT-4, LLaMA3, Gemini</p>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            <div class="highlight-box">
+              <h5>Diffusion (LLaDA)</h5>
+              <p>Like filling in blanks in a sentence, considering all context at once.</p>
+              <p><strong>Example:</strong> LLaDA (Large Language Diffusion with Masking)</p>
+            </div>
+          </div>
+        </div>
+        
+        <table class="simple-table">
+          <tr>
+            <th>Feature</th>
+            <th>Autoregressive</th>
+            <th>Diffusion (LLaDA)</th>
+          </tr>
+          <tr>
+            <td>Generation style</td>
+            <td>One word at a time</td>
+            <td>Multiple words at once</td>
+          </tr>
+          <tr>
+            <td>Sees context</td>
+            <td>Only previous words</td>
+            <td>All words (both directions)</td>
+          </tr>
+          <tr>
+            <td>Special strength</td>
+            <td>Coherent storytelling</td>
+            <td>Understanding relationships between concepts</td>
+          </tr>
+          <tr>
+            <td>Real-world example</td>
+            <td>Like writing a story from start to finish</td>
+            <td>Like solving a crossword puzzle</td>
+          </tr>
+        </table>
+        
+        <div class="model-explainer">
+          <h4>What makes LLaDA special:</h4>
+          <p>LLaDA is a new approach to AI language models that works differently from traditional models like ChatGPT. The key innovation is that LLaDA can look at the entire context (both before and after) when generating text, which helps it better understand relationships between concepts.</p>
+          <p>In testing, LLaDA performed better than even advanced models like GPT-4o on tasks requiring bidirectional understanding - like understanding that "Alice is Bob's sister" also means "Bob is Alice's brother" - a challenge called the "reversal curse" that traditional models struggle with.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Animation data
+      const promptTokens = ["The", "sky", "is"];
+      const completionTokens = ["blue", "and", "clear", "today", "."];
+      
+      // Autoregressive setup
+      const armTokenDisplay = document.getElementById('arm-tokens');
+      const armProgressBar = document.getElementById('arm-progress-bar');
+      const armCounter = document.getElementById('arm-counter');
+      const armPlay = document.getElementById('arm-play');
+      const armReset = document.getElementById('arm-reset');
+      
+      let armTimer = null;
+      let armStep = 0;
+      const armTotalSteps = promptTokens.length + completionTokens.length;
+      
+      // Diffusion setup
+      const diffTokenDisplay = document.getElementById('diff-tokens');
+      const diffProgressBar = document.getElementById('diff-progress-bar');
+      const diffCounter = document.getElementById('diff-counter');
+      const diffPlay = document.getElementById('diff-play');
+      const diffReset = document.getElementById('diff-reset');
+      
+      let diffTimer = null;
+      let diffStep = 0;
+      const diffTotalSteps = 4;
+      let maskedIndices = []; // Track positions of masked tokens
+      
+      // Initialize displays
+      function setupARM() {
+        armTokenDisplay.innerHTML = '';
+        promptTokens.forEach(token => {
+          const tokenElement = document.createElement('div');
+          tokenElement.className = 'token prompt-token';
+          tokenElement.textContent = token;
+          armTokenDisplay.appendChild(tokenElement);
+        });
+        armStep = 0;
+        armCounter.textContent = `Step: ${armStep}/${armTotalSteps}`;
+        armProgressBar.style.width = '0%';
+        
+        if (armTimer) {
+          clearInterval(armTimer);
+          armTimer = null;
+        }
+        armPlay.textContent = 'Play';
+      }
+      
+      function setupDiffusion() {
+        diffTokenDisplay.innerHTML = '';
+        promptTokens.forEach(token => {
+          const tokenElement = document.createElement('div');
+          tokenElement.className = 'token prompt-token';
+          tokenElement.textContent = token;
+          diffTokenDisplay.appendChild(tokenElement);
+        });
+        
+        // Add masked tokens and store their indices
+        maskedIndices = [];
+        completionTokens.forEach((_, index) => {
+          const tokenElement = document.createElement('div');
+          tokenElement.className = 'token masked';
+          tokenElement.textContent = '?';
+          diffTokenDisplay.appendChild(tokenElement);
+          maskedIndices.push(promptTokens.length + index); // Index in full sequence
+        });
+        
+        diffStep = 0;
+        diffCounter.textContent = `Step: ${diffStep}/${diffTotalSteps}`;
+        diffProgressBar.style.width = '0%';
+        
+        if (diffTimer) {
+          clearInterval(diffTimer);
+          diffTimer = null;
+        }
+        diffPlay.textContent = 'Play';
+      }
+      
+      // Animation functions
+      function animateARM() {
+        const tokens = armTokenDisplay.querySelectorAll('.token');
+        if (armStep < promptTokens.length) {
+          tokens.forEach((token, i) => {
+            token.classList.toggle('active', i === armStep);
+          });
+        } else if (armStep < armTotalSteps) {
+          const tokenIndex = armStep - promptTokens.length;
+          const tokenElement = document.createElement('div');
+          tokenElement.className = 'token arm-token active';
+          tokenElement.textContent = completionTokens[tokenIndex];
+          armTokenDisplay.appendChild(tokenElement);
+          setTimeout(() => tokenElement.classList.remove('active'), 700);
+        } else {
+          clearInterval(armTimer);
+          armTimer = null;
+          armPlay.textContent = 'Play';
+          return;
+        }
+        
+        armStep++;
+        const progress = (armStep / armTotalSteps) * 100;
+        armProgressBar.style.width = `${progress}%`;
+        armCounter.textContent = `Step: ${armStep}/${armTotalSteps}`;
+      }
+      
+      function animateDiffusion() {
+        const allTokens = diffTokenDisplay.querySelectorAll('.token');
+        if (diffStep === 0) {
+          // Step 0: Highlight all masked tokens
+          allTokens.forEach((token, i) => {
+            if (maskedIndices.includes(i)) {
+              token.classList.add('active');
+              setTimeout(() => token.classList.remove('active'), 700);
+            }
+          });
+        } else if (diffStep < diffTotalSteps) {
+          // Reveal tokens in batches, randomly selecting from remaining masked positions
+          const tokensToReveal = Math.ceil(completionTokens.length / diffTotalSteps);
+          const availableIndices = [...maskedIndices];
+          
+          for (let i = 0; i < tokensToReveal && availableIndices.length > 0; i++) {
+            const randomIdx = Math.floor(Math.random() * availableIndices.length);
+            const tokenIdx = availableIndices.splice(randomIdx, 1)[0];
+            const tokenElement = allTokens[tokenIdx];
+            const completionIdx = tokenIdx - promptTokens.length;
+
+            tokenElement.textContent = completionTokens[completionIdx];
+            tokenElement.classList.remove('masked');
+            tokenElement.classList.add('diff-token', 'active');
+            setTimeout(() => tokenElement.classList.remove('active'), 700);
+
+            maskedIndices = maskedIndices.filter(idx => idx !== tokenIdx);
+          }
+        } else {
+          // Final step: Ensure all tokens are revealed
+          allTokens.forEach((token, i) => {
+            if (maskedIndices.includes(i)) {
+              const completionIdx = i - promptTokens.length;
+              token.textContent = completionTokens[completionIdx];
+              token.classList.remove('masked');
+              token.classList.add('diff-token', 'active');
+              setTimeout(() => token.classList.remove('active'), 700);
+            }
+          });
+          maskedIndices = [];
+          clearInterval(diffTimer);
+          diffTimer = null;
+          diffPlay.textContent = 'Play';
+          return;
+        }
+        
+        diffStep++;
+        const progress = (diffStep / diffTotalSteps) * 100;
+        diffProgressBar.style.width = `${progress}%`;
+        diffCounter.textContent = `Step: ${diffStep}/${diffTotalSteps}`;
+      }
+      
+      // Event listeners
+      armPlay.addEventListener('click', function() {
+        if (!armTimer) {
+          armTimer = setInterval(animateARM, 1200);
+          armPlay.textContent = 'Pause';
+        } else {
+          clearInterval(armTimer);
+          armTimer = null;
+          armPlay.textContent = 'Play';
+        }
+      });
+      
+      armReset.addEventListener('click', setupARM);
+      
+      diffPlay.addEventListener('click', function() {
+        if (!diffTimer) {
+          diffTimer = setInterval(animateDiffusion, 1200);
+          diffPlay.textContent = 'Pause';
+        } else {
+          clearInterval(diffTimer);
+          diffTimer = null;
+          diffPlay.textContent = 'Play';
+        }
+      });
+      
+      diffReset.addEventListener('click', setupDiffusion);
+      
+      // Initialize
+      setupARM();
+      setupDiffusion();
+    });
+  </script>
+</body>
+</html>
