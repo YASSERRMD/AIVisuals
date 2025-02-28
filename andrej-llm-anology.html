@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Analogies Visualization</title>
+    <!-- Bootstrap CSS and Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .card {
+            margin-bottom: 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .card-header {
+            background-color: #4a6fdc;
+            color: white;
+            font-weight: bold;
+            padding: 15px;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .icon-container {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 20px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+        .animate-bounce {
+            animation: bounce 2s infinite;
+        }
+        .animate-slide {
+            animation: slide 3s infinite;
+        }
+        .animate-spin {
+            animation: spin 3s infinite linear;
+        }
+        .animate-type {
+            animation: type 3s infinite;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 3px solid;
+            width: 0;
+            animation: type 4s steps(20) 1s infinite;
+        }
+        .animate-compress {
+            animation: compress 3s infinite;
+        }
+        .animate-scale {
+            animation: scale 3s infinite;
+        }
+        .animate-fade {
+            animation: fade 3s infinite;
+        }
+        .animate-float {
+            animation: float 3s infinite;
+        }
+        .animate-ripple {
+            position: relative;
+        }
+        .animate-ripple::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(74, 111, 220, 0.7);
+            animation: ripple 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        @keyframes slide {
+            0% { transform: translateX(-20px); }
+            50% { transform: translateX(20px); }
+            100% { transform: translateX(-20px); }
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes type {
+            from { width: 0 }
+            to { width: 100% }
+            50% { width: 100% }
+            55% { width: 100% }
+            65% { width: 0 }
+        }
+        @keyframes compress {
+            0% { transform: scaleX(1); }
+            50% { transform: scaleX(0.7); }
+            100% { transform: scaleX(1); }
+        }
+        @keyframes scale {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        @keyframes fade {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            25% { transform: translateY(-5px) rotate(-5deg); }
+            50% { transform: translateY(-10px) rotate(0); }
+            75% { transform: translateY(-5px) rotate(5deg); }
+        }
+        @keyframes ripple {
+            0% { box-shadow: 0 0 0 0 rgba(74, 111, 220, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(74, 111, 220, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(74, 111, 220, 0); }
+        }
+        .tokens-container {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        .token {
+            background-color: #e9ecef;
+            padding: 5px 8px;
+            margin: 0 3px;
+            border-radius: 5px;
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .window-container {
+            border: 2px dashed #4a6fdc;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .memory-token {
+            display: inline-block;
+            background-color: #4a6fdc;
+            color: white;
+            padding: 5px 8px;
+            margin: 3px;
+            border-radius: 5px;
+            animation: memory-pulse 3s infinite;
+        }
+        @keyframes memory-pulse {
+            0% { background-color: #4a6fdc; }
+            50% { background-color: #8ca0e0; }
+            100% { background-color: #4a6fdc; }
+        }
+        .zip-file {
+            width: 60px;
+            height: 80px;
+            background-color: #f5f5f5;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            position: relative;
+            margin: 0 auto;
+        }
+        .zip-file:after {
+            content: ".ZIP";
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .character {
+            margin-top: 5px;
+            font-size: 1.5rem;
+        }
+        .thought-bubble {
+            position: relative;
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 10px;
+            margin-left: 50px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .thought-bubble:before {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: -30px;
+            border-width: 10px;
+            border-style: solid;
+            border-color: transparent transparent #fff transparent;
+            transform: rotate(50deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Andrej Karpathy's AI Analogies Explained</h1>
+        <div class="row">
+            <!-- LLMs as Chatbots -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-header">LLMs as Chatbots</div>
+                    <div class="card-body">
+                        <div class="icon-container">
+                            <i class="bi bi-chat-dots animate-pulse" style="color: #4a6fdc;"></i>
+                        </div>
+                        <p>Interacting with ChatGPT is like having a conversation with a friend using chat bubbles.</p>
+                        <div class="chat-container">
+                            <div class="d-flex mb-2">
+                                <div class="bg-primary text-white p-2 rounded-3 animate-slide" style="max-width: 80%;">Hey there! How can I help you today?</div>
+                            </div>
+                            <div class="d-flex justify-content-end mb-2">
+                                <div class="bg-light p-2 rounded-3 animate-slide" style="max-width: 80%;">Can you explain how AI works?</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tokens as Building Blocks -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-header">Tokens as Building Blocks</div>
+                    <div class="card-body">
+                        <div class="icon-container">
+                            <i class="bi bi-bricks animate-bounce" style="color: #dc6f4a;"></i>
+                        </div>
+                        <p>Text is chopped into tokens, which are the small text chunks that the model processes.</p>
+                        <div class="tokens-container">
+                            <div class="token animate-scale" style="animation-delay: 0s;">Hello</div>
+                            <div class="token animate-scale" style="animation-delay: 0.2s;">world</div>
+                            <div class="token animate-scale" style="animation-delay: 0.4s;">how</div>
+                            <div class="token animate-scale" style="animation-delay: 0.6s;">are</div>
+                            <div class="token animate-scale" style="animation-delay: 0.8s;">you</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Context Window as Working Memory -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-header">Context Window as Working Memory</div>
+                    <div class="card-body">
+                        <div class="icon-container">
+                            <i class="bi bi-window animate-pulse" style="color: #6fdc4a;"></i>
+                        </div>
+                        <p>The context window is the working memory of tokens - anything inside is directly accessible.</p>
+                        <div class="window-container">
+                            <div class="memory-token">Token 1</div>
+                            <div class="memory-token">Token 2</div>
+                            <div class="memory-token">Token 3</div>
+                            <div class="memory-token">...</div>
+                            <div class="memory-token">Token N</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pre-training as Compression -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-header">Pre-training as Compression</div>
+                    <div class="card-body">
+                        <div class="icon-container">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <i class="bi bi-globe me-2" style="color: #4aaddc;"></i>
+                                <i class="bi bi-arrow-right mx-2 animate-pulse"></i>
+                                <div class="zip-file animate-compress"></div>
+                            </div>
+                        </div>
+                        <p>Pre-training is like compressing all of the internet into a single, lossy, probabilistic zip file.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parameters as Knowledge -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-header">Parameters as Knowledge</div>
+                    <div class="card-body">
+                        <div class="icon-container">
+                            <i class="bi bi-database-fill animate-float" style="color: #dc4a9d;"></i>
+                        </div>
+                        <p>The contents of the zip file are the parameters of a neural network, with a 1TB file equating to roughly one trillion parameters.</p>
+                        <div class="d-flex justify-content-center">
+                            <div class="bg-light px-3 py-1 rounded animate-type">1,000,000,000,000 parameters</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LLMs as Internet Document Generators -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-header">LLMs as Internet Document Generators</div>
+                    <div class="card-body">
+                        <div class="icon-container">
+                            <i class="bi bi-file-earmark-text animate-fade" style="color: #9d4adc;"></i>
+                        </div>
+                        <p>During pre-training, the model acts as an internet document generator.</p>
+                        <div class="d-flex justify-content-center">
+                            <div style="max-width: 200px; text-align: left;">
+                                <div class="bg-light p-1 mb-1 rounded animate-scale" style="animation-delay: 0s;">Document 1</div>
+                                <div class="bg-light p-1 mb-1 rounded animate-scale" style="animation-delay: 0.3s;">Document 2</div>
+                                <div class="bg-light p-1 mb-1 rounded animate-scale" style="animation-delay: 0.6s;">Document 3</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Post-training as Adding Personality -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-header">Post-training as Adding Personality</div>
+                    <div class="card-body">
+                        <div class="icon-container">
+                            <div class="position-relative">
+                                <div class="zip-file"></div>
+                                <div class="character position-absolute" style="top: -15px; right: -15px;">
+                                    <i class="bi bi-emoji-smile animate-bounce" style="color: #f7d014;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p>The post-training stage is like attaching a smiley face to the zip file, giving the model the persona of an assistant.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LLMs as Self-Contained Entities -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-header">LLMs as Self-Contained Entities</div>
+                    <div class="card-body">
+                        <div class="icon-container">
+                            <i class="bi bi-file-lock animate-pulse" style="color: #4a6fdc;"></i>
+                        </div>
+                        <p>A language model is a fully self-contained entity, like a 1TB file representing one trillion parameters, without built-in tools.</p>
+                        <div class="d-flex justify-content-center">
+                            <div class="zip-file"></div>
+                            <div class="ms-2 text-muted" style="font-size: 12px;">
+                                <div><i class="bi bi-x-circle"></i> No calculator</div>
+                                <div><i class="bi bi-x-circle"></i> No browser</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thinking Models -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-header">Thinking Models</div>
+                    <div class="card-body">
+                        <div class="icon-container">
+                            <div class="position-relative">
+                                <i class="bi bi-emoji-neutral" style="color: #dc9d4a; font-size: 2.5rem;"></i>
+                                <div class="thought-bubble animate-fade">
+                                    <span style="font-size: 0.8rem;">Hmm, let me think...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Karpathy represents thinking models as an emoji with an optional thinking bubble.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LLMs as Junior Data Analysts -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-header">LLMs as Junior Data Analysts</div>
+                    <div class="card-body">
+                        <div class="icon-container">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-bar-chart animate-scale" style="color: #4adc9d;"></i>
+                                <i class="bi bi-person-badge ms-2" style="color: #6f4adc;"></i>
+                            </div>
+                        </div>
+                        <p>LLMs are like very junior data analysts that can plot figures but require supervision because they're a little absent-minded.</p>
+                        <div class="d-flex justify-content-center text-muted">
+                            <div style="font-size: 0.8rem;">
+                                <i class="bi bi-exclamation-triangle-fill"></i> Needs supervision
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI podcast -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-header">AI Podcast</div>
+                    <div class="card-body">
+                        <div class="icon-container">
+                            <i class="bi bi-mic animate-pulse" style="color: #dc4a4a;"></i>
+                        </div>
+                        <p>Custom AI podcasts are like having conversations about any arbitrary niche topic, which can be therapeutic for specialized interests.</p>
+                        <div class="d-flex justify-content-center">
+                            <div class="bg-light rounded-pill px-3 py-1 me-1 animate-scale" style="font-size: 0.8rem;">Chess</div>
+                            <div class="bg-light rounded-pill px-3 py-1 me-1 animate-scale" style="font-size: 0.8rem; animation-delay: 0.3s;">Gardening</div>
+                            <div class="bg-light rounded-pill px-3 py-1 animate-scale" style="font-size: 0.8rem; animation-delay: 0.6s;">Quantum Physics</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Bootstrap and Popper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
