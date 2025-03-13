@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -404,4 +405,245 @@
                     <i class="fas fa-brain me-2"></i> Neurons
                 </div>
                 <div class="quiz-option">
-                <response clipped><NOTE>To save on context only part of this file has been shown to you. You should retry this tool after you have searched inside the file with `grep -n` in order to find the line numbers of what you are looking for.</NOTE>
+                    <i class="fas fa-cogs me-2"></i> Gears
+                </div>
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary" id="checkAnswerBtn">Check Answer</button>
+                </div>
+            </div>
+            
+            <!-- Try It Yourself -->
+            <div class="content-card mt-5">
+                <h2 class="mb-4">Try It Yourself!</h2>
+                <p>Want to see a real computer brain in action? Try these fun activities:</p>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card bg-transparent border border-light border-opacity-10">
+                            <img src="https://cdn-icons-png.flaticon.com/512/3588/3588614.png" class="card-img-top p-4" alt="Drawing Activity">
+                            <div class="card-body">
+                                <h5 class="card-title">Quick, Draw!</h5>
+                                <p class="card-text">Draw a picture and see if the computer brain can guess what it is!</p>
+                                <a href="https://quickdraw.withgoogle.com/" target="_blank" class="btn btn-primary">Try It Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card bg-transparent border border-light border-opacity-10">
+                            <img src="https://cdn-icons-png.flaticon.com/512/2659/2659360.png" class="card-img-top p-4" alt="Image Recognition">
+                            <div class="card-body">
+                                <h5 class="card-title">Teachable Machine</h5>
+                                <p class="card-text">Train your own computer brain to recognize objects using your camera!</p>
+                                <a href="https://teachablemachine.withgoogle.com/" target="_blank" class="btn btn-primary">Try It Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Next Steps -->
+    <section class="py-5 bg-dark">
+        <div class="container">
+            <h2 class="text-center mb-5">Continue Your Learning Adventure!</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card bg-transparent border border-light border-opacity-10 h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-tree text-primary mb-3" style="font-size: 3rem;"></i>
+                            <h5 class="card-title">Decision Trees</h5>
+                            <p class="card-text">Learn how computers make choices like you do!</p>
+                            <a href="decision-trees.html" class="btn btn-outline-primary">Explore Next</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-transparent border border-light border-opacity-10 h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-magic text-primary mb-3" style="font-size: 3rem;"></i>
+                            <h5 class="card-title">Pattern Magic</h5>
+                            <p class="card-text">Discover how computers find hidden patterns!</p>
+                            <a href="pattern-magic.html" class="btn btn-outline-primary">Explore Next</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-transparent border border-light border-opacity-10 h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-robot text-primary mb-3" style="font-size: 3rem;"></i>
+                            <h5 class="card-title">Robot Teachers</h5>
+                            <p class="card-text">See how robots learn from their mistakes!</p>
+                            <a href="robot-teachers.html" class="btn btn-outline-primary">Explore Next</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-4">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <a class="navbar-brand d-flex align-items-center" href="index.html">
+                        <i class="fas fa-robot me-2 text-primary"></i>
+                        <span class="animated-gradient-text">ML Adventure</span>
+                    </a>
+                    <p class="text-light-50 mt-3">Making machine learning fun and exciting for curious young minds!</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0 text-light-50">© 2025 ML Adventure. All rights reserved.</p>
+                    <p class="mb-0 text-light-50">Made with <i class="fas fa-heart text-danger"></i> for young explorers</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Character -->
+    <div class="character">
+        <div class="character-bubble">
+            Hi there! I'm Bit, your AI guide. Click me if you need help!
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Neural Network Simulator
+            const brainContainer = document.getElementById('brainContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const trainButton = document.getElementById('trainButton');
+            
+            // Create brain nodes
+            const nodeCount = 12;
+            const nodes = [];
+            
+            for (let i = 0; i < nodeCount; i++) {
+                const node = document.createElement('div');
+                node.className = 'brain-node';
+                node.textContent = i + 1;
+                
+                // Position nodes in a brain-like pattern
+                let x, y;
+                if (i < 3) {
+                    // Input layer
+                    x = 20;
+                    y = 50 + i * 100;
+                } else if (i < 9) {
+                    // Hidden layer
+                    x = 150;
+                    y = 20 + (i - 3) * 50;
+                } else {
+                    // Output layer
+                    x = 280;
+                    y = 50 + (i - 9) * 100;
+                }
+                
+                node.style.left = x + 'px';
+                node.style.top = y + 'px';
+                
+                brainContainer.appendChild(node);
+                nodes.push(node);
+            }
+            
+            // Create connections between nodes
+            for (let i = 0; i < 3; i++) {
+                for (let j = 3; j < 9; j++) {
+                    createConnection(nodes[i], nodes[j]);
+                }
+            }
+            
+            for (let i = 3; i < 9; i++) {
+                for (let j = 9; j < 12; j++) {
+                    createConnection(nodes[i], nodes[j]);
+                }
+            }
+            
+            function createConnection(nodeA, nodeB) {
+                const connection = document.createElement('div');
+                connection.className = 'brain-connection';
+                
+                const x1 = parseInt(nodeA.style.left) + 20;
+                const y1 = parseInt(nodeA.style.top) + 20;
+                const x2 = parseInt(nodeB.style.left) + 20;
+                const y2 = parseInt(nodeB.style.top) + 20;
+                
+                const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+                
+                connection.style.width = length + 'px';
+                connection.style.left = x1 + 'px';
+                connection.style.top = y1 + 'px';
+                connection.style.transform = `rotate(${angle}deg)`;
+                
+                brainContainer.appendChild(connection);
+            }
+            
+            // Training simulation
+            let progress = 0;
+            let trainingInterval;
+            
+            trainButton.addEventListener('click', function() {
+                if (trainButton.textContent === 'Start Training') {
+                    trainButton.textContent = 'Stop Training';
+                    
+                    trainingInterval = setInterval(function() {
+                        progress += 1;
+                        if (progress > 100) {
+                            clearInterval(trainingInterval);
+                            trainButton.textContent = 'Training Complete!';
+                            trainButton.disabled = true;
+                            return;
+                        }
+                        
+                        progressBar.style.width = progress + '%';
+                        progressText.textContent = progress + '% trained';
+                        
+                        // Animate random nodes to simulate activity
+                        const randomNode = nodes[Math.floor(Math.random() * nodes.length)];
+                        randomNode.style.backgroundColor = '#00e6a1';
+                        setTimeout(function() {
+                            randomNode.style.backgroundColor = '';
+                        }, 300);
+                    }, 100);
+                } else {
+                    clearInterval(trainingInterval);
+                    trainButton.textContent = 'Start Training';
+                }
+            });
+            
+            // Quiz functionality
+            const quizOptions = document.querySelectorAll('.quiz-option');
+            const checkButton = document.getElementById('checkAnswerBtn');
+            
+            quizOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    quizOptions.forEach(opt => opt.style.border = 'none');
+                    this.style.border = '2px solid var(--primary)';
+                });
+            });
+            
+            checkButton.addEventListener('click', function() {
+                const selectedOption = document.querySelector('.quiz-option[style*="border"]');
+                if (selectedOption && selectedOption.innerHTML.includes('Neurons')) {
+                    selectedOption.style.backgroundColor = 'rgba(0, 230, 161, 0.2)';
+                    alert('Correct! Neurons are the tiny cells in your brain that help you think and learn!');
+                } else if (selectedOption) {
+                    selectedOption.style.backgroundColor = 'rgba(255, 99, 71, 0.2)';
+                    alert('Not quite! Try again!');
+                } else {
+                    alert('Please select an answer first!');
+                }
+            });
+            
+            // Character interaction
+            const character = document.querySelector('.character');
+            character.addEventListener('click', function() {
+                alert('Hi! I\'m Bit, your AI friend! Computer brains are inspired by how your brain works. They have artificial neurons that connect and learn patterns!');
+            });
+        });
+    </script>
+</body>
+</html>
