@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -408,4 +409,369 @@
                     <i class="fas fa-comment-dots me-2"></i> Long, complicated questions with many possible answers
                 </div>
                 <div class="quiz-option">
-                    <i class="fas fa-check-circle me-2"></i> Simple yes/no question<response clipped><NOTE>To save on context only part of this file has been shown to you. You should retry this tool after you have searched inside the file with `grep -n` in order to find the line numbers of what you are looking for.</NOTE>
+                    <i class="fas fa-check-circle me-2"></i> Simple yes/no questions that help narrow down possibilities
+                </div>
+                <div class="quiz-option">
+                    <i class="fas fa-question-circle me-2"></i> Random questions that change each time
+                </div>
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary" id="checkAnswerBtn">Check Answer</button>
+                </div>
+            </div>
+            
+            <!-- Try It Yourself -->
+            <div class="content-card mt-5">
+                <h2 class="mb-4">Try It Yourself!</h2>
+                <p>Want to see real decision trees in action? Try these fun activities:</p>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card bg-transparent border border-light border-opacity-10">
+                            <img src="https://cdn-icons-png.flaticon.com/512/2619/2619285.png" class="card-img-top p-4" alt="20 Questions Game">
+                            <div class="card-body">
+                                <h5 class="card-title">Akinator</h5>
+                                <p class="card-text">Play against a genie that uses decision trees to guess what character you're thinking of!</p>
+                                <a href="https://en.akinator.com/" target="_blank" class="btn btn-primary">Try It Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card bg-transparent border border-light border-opacity-10">
+                            <img src="https://cdn-icons-png.flaticon.com/512/2682/2682065.png" class="card-img-top p-4" alt="Decision Tree Builder">
+                            <div class="card-body">
+                                <h5 class="card-title">Build Your Own Tree</h5>
+                                <p class="card-text">Create a simple decision tree to classify animals or fruits with this interactive tool!</p>
+                                <a href="https://ml-playground.com/" target="_blank" class="btn btn-primary">Try It Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Next Steps -->
+    <section class="py-5 bg-dark">
+        <div class="container">
+            <h2 class="text-center mb-5">Continue Your Learning Adventure!</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card bg-transparent border border-light border-opacity-10 h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-brain text-primary mb-3" style="font-size: 3rem;"></i>
+                            <h5 class="card-title">Computer Brains</h5>
+                            <p class="card-text">Learn how computers think like a brain!</p>
+                            <a href="computer-brains.html" class="btn btn-outline-primary">Explore Next</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-transparent border border-light border-opacity-10 h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-magic text-primary mb-3" style="font-size: 3rem;"></i>
+                            <h5 class="card-title">Pattern Magic</h5>
+                            <p class="card-text">Discover how computers find hidden patterns!</p>
+                            <a href="pattern-magic.html" class="btn btn-outline-primary">Explore Next</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-transparent border border-light border-opacity-10 h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-robot text-primary mb-3" style="font-size: 3rem;"></i>
+                            <h5 class="card-title">Robot Teachers</h5>
+                            <p class="card-text">See how robots learn from their mistakes!</p>
+                            <a href="robot-teachers.html" class="btn btn-outline-primary">Explore Next</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-4">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <a class="navbar-brand d-flex align-items-center" href="index.html">
+                        <i class="fas fa-robot me-2 text-primary"></i>
+                        <span class="animated-gradient-text">ML Adventure</span>
+                    </a>
+                    <p class="text-light-50 mt-3">Making machine learning fun and exciting for curious young minds!</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0 text-light-50">© 2025 ML Adventure. All rights reserved.</p>
+                    <p class="mb-0 text-light-50">Made with <i class="fas fa-heart text-danger"></i> for young explorers</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Character -->
+    <div class="character">
+        <div class="character-bubble">
+            Hi there! I'm Bit, your AI guide. Click me if you need help!
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Decision Tree Visualization
+            const treeContainer = document.getElementById('treeContainer');
+            
+            // Create tree nodes
+            const nodes = [
+                { id: 1, text: "Is it bigger than a cat?", x: 350, y: 30 },
+                { id: 2, text: "Does it live in water?", x: 150, y: 120 },
+                { id: 3, text: "Does it have stripes?", x: 550, y: 120 },
+                { id: 4, text: "Does it hop?", x: 50, y: 210 },
+                { id: 5, text: "Does it have a shell?", x: 250, y: 210 },
+                { id: 6, text: "Does it have spots?", x: 450, y: 210 },
+                { id: 7, text: "Does it have a long neck?", x: 650, y: 210 },
+                { id: 8, text: "Mouse", x: 0, y: 300 },
+                { id: 9, text: "Frog", x: 100, y: 300 },
+                { id: 10, text: "Fish", x: 200, y: 300 },
+                { id: 11, text: "Turtle", x: 300, y: 300 },
+                { id: 12, text: "Lion", x: 400, y: 300 },
+                { id: 13, text: "Leopard", x: 500, y: 300 },
+                { id: 14, text: "Zebra", x: 600, y: 300 },
+                { id: 15, text: "Giraffe", x: 700, y: 300 }
+            ];
+            
+            // Create connections between nodes
+            const connections = [
+                { from: 1, to: 2, label: "No" },
+                { from: 1, to: 3, label: "Yes" },
+                { from: 2, to: 4, label: "No" },
+                { from: 2, to: 5, label: "Yes" },
+                { from: 3, to: 6, label: "No" },
+                { from: 3, to: 7, label: "Yes" },
+                { from: 4, to: 8, label: "No" },
+                { from: 4, to: 9, label: "Yes" },
+                { from: 5, to: 10, label: "No" },
+                { from: 5, to: 11, label: "Yes" },
+                { from: 6, to: 12, label: "No" },
+                { from: 6, to: 13, label: "Yes" },
+                { from: 7, to: 14, label: "No" },
+                { from: 7, to: 15, label: "Yes" }
+            ];
+            
+            // Create nodes
+            nodes.forEach(node => {
+                const nodeElement = document.createElement('div');
+                nodeElement.className = 'tree-node';
+                nodeElement.id = 'node-' + node.id;
+                nodeElement.textContent = node.text;
+                nodeElement.style.left = node.x + 'px';
+                nodeElement.style.top = node.y + 'px';
+                
+                // Make leaf nodes (animals) a different color
+                if (node.id >= 8) {
+                    nodeElement.style.background = 'var(--accent)';
+                }
+                
+                treeContainer.appendChild(nodeElement);
+            });
+            
+            // Create connections
+            connections.forEach(conn => {
+                const fromNode = document.getElementById('node-' + conn.from);
+                const toNode = document.getElementById('node-' + conn.to);
+                
+                const fromX = parseInt(fromNode.style.left) + 60;
+                const fromY = parseInt(fromNode.style.top) + 30;
+                const toX = parseInt(toNode.style.left) + 60;
+                const toY = parseInt(toNode.style.top) + 30;
+                
+                const length = Math.sqrt(Math.pow(toX - fromX, 2) + Math.pow(toY - fromY, 2));
+                const angle = Math.atan2(toY - fromY, toX - fromX) * 180 / Math.PI;
+                
+                const connection = document.createElement('div');
+                connection.className = 'tree-connection';
+                connection.style.width = length + 'px';
+                connection.style.left = fromX + 'px';
+                connection.style.top = fromY + 'px';
+                connection.style.transform = `rotate(${angle}deg)`;
+                
+                // Add label
+                const label = document.createElement('div');
+                label.style.position = 'absolute';
+                label.style.top = '-15px';
+                label.style.left = length / 2 - 10 + 'px';
+                label.style.background = 'var(--dark)';
+                label.style.padding = '2px 8px';
+                label.style.borderRadius = '10px';
+                label.style.fontSize = '0.8rem';
+                label.textContent = conn.label;
+                
+                connection.appendChild(label);
+                treeContainer.appendChild(connection);
+            });
+            
+            // Animal Guesser Game
+            const animalImage = document.getElementById('animalImage');
+            const questionText = document.getElementById('questionText');
+            const yesButton = document.getElementById('yesButton');
+            const noButton = document.getElementById('noButton');
+            
+            let currentQuestion = 1;
+            let currentPath = [];
+            
+            const questions = {
+                1: "Is this animal bigger than a cat?",
+                2: "Does it live in water?",
+                3: "Does it have stripes?",
+                4: "Does it hop?",
+                5: "Does it have a shell?",
+                6: "Does it have spots?",
+                7: "Does it have a long neck?"
+            };
+            
+            const animals = {
+                8: { name: "Mouse", image: "https://cdn-icons-png.flaticon.com/512/616/616419.png" },
+                9: { name: "Frog", image: "https://cdn-icons-png.flaticon.com/512/3069/3069172.png" },
+                10: { name: "Fish", image: "https://cdn-icons-png.flaticon.com/512/1998/1998627.png" },
+                11: { name: "Turtle", image: "https://cdn-icons-png.flaticon.com/512/3069/3069217.png" },
+                12: { name: "Lion", image: "https://cdn-icons-png.flaticon.com/512/616/616412.png" },
+                13: { name: "Leopard", image: "https://cdn-icons-png.flaticon.com/512/616/616523.png" },
+                14: { name: "Zebra", image: "https://cdn-icons-png.flaticon.com/512/616/616554.png" },
+                15: { name: "Giraffe", image: "https://cdn-icons-png.flaticon.com/512/616/616433.png" }
+            };
+            
+            function highlightNode(id) {
+                // Reset all nodes
+                nodes.forEach(node => {
+                    const nodeElement = document.getElementById('node-' + node.id);
+                    if (node.id < 8) {
+                        nodeElement.style.background = 'var(--primary)';
+                    } else {
+                        nodeElement.style.background = 'var(--accent)';
+                    }
+                    nodeElement.style.transform = 'scale(1)';
+                });
+                
+                // Highlight current node
+                const currentNode = document.getElementById('node-' + id);
+                currentNode.style.background = 'var(--yellow)';
+                currentNode.style.transform = 'scale(1.1)';
+            }
+            
+            function resetGame() {
+                currentQuestion = 1;
+                currentPath = [];
+                questionText.textContent = questions[currentQuestion];
+                animalImage.style.backgroundImage = "url('https://cdn-icons-png.flaticon.com/512/3069/3069186.png')";
+                yesButton.style.display = 'inline-block';
+                noButton.style.display = 'inline-block';
+                highlightNode(currentQuestion);
+            }
+            
+            yesButton.addEventListener('click', function() {
+                currentPath.push("yes");
+                
+                if (currentQuestion === 1) {
+                    currentQuestion = 3; // Big animal path
+                } else if (currentQuestion === 2) {
+                    currentQuestion = 5; // Water animal path
+                } else if (currentQuestion === 3) {
+                    currentQuestion = 7; // Striped animal path
+                } else if (currentQuestion === 4) {
+                    currentQuestion = 9; // Hopping animal
+                    showResult(currentQuestion);
+                    return;
+                } else if (currentQuestion === 5) {
+                    currentQuestion = 11; // Shelled animal
+                    showResult(currentQuestion);
+                    return;
+                } else if (currentQuestion === 6) {
+                    currentQuestion = 13; // Spotted animal
+                    showResult(currentQuestion);
+                    return;
+                } else if (currentQuestion === 7) {
+                    currentQuestion = 15; // Long-necked animal
+                    showResult(currentQuestion);
+                    return;
+                }
+                
+                questionText.textContent = questions[currentQuestion];
+                highlightNode(currentQuestion);
+            });
+            
+            noButton.addEventListener('click', function() {
+                currentPath.push("no");
+                
+                if (currentQuestion === 1) {
+                    currentQuestion = 2; // Small animal path
+                } else if (currentQuestion === 2) {
+                    currentQuestion = 4; // Land small animal path
+                } else if (currentQuestion === 3) {
+                    currentQuestion = 6; // Non-striped big animal path
+                } else if (currentQuestion === 4) {
+                    currentQuestion = 8; // Non-hopping small animal
+                    showResult(currentQuestion);
+                    return;
+                } else if (currentQuestion === 5) {
+                    currentQuestion = 10; // Non-shelled water animal
+                    showResult(currentQuestion);
+                    return;
+                } else if (currentQuestion === 6) {
+                    currentQuestion = 12; // Non-spotted big animal
+                    showResult(currentQuestion);
+                    return;
+                } else if (currentQuestion === 7) {
+                    currentQuestion = 14; // Non-long-necked striped animal
+                    showResult(currentQuestion);
+                    return;
+                }
+                
+                questionText.textContent = questions[currentQuestion];
+                highlightNode(currentQuestion);
+            });
+            
+            function showResult(animalId) {
+                const animal = animals[animalId];
+                animalImage.style.backgroundImage = `url('${animal.image}')`;
+                questionText.textContent = `I think it's a ${animal.name}! Click any button to play again.`;
+                highlightNode(animalId);
+                
+                yesButton.addEventListener('click', resetGame, { once: true });
+                noButton.addEventListener('click', resetGame, { once: true });
+            }
+            
+            // Initialize game
+            highlightNode(currentQuestion);
+            
+            // Quiz functionality
+            const quizOptions = document.querySelectorAll('.quiz-option');
+            const checkButton = document.getElementById('checkAnswerBtn');
+            
+            quizOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    quizOptions.forEach(opt => opt.style.border = 'none');
+                    this.style.border = '2px solid var(--primary)';
+                });
+            });
+            
+            checkButton.addEventListener('click', function() {
+                const selectedOption = document.querySelector('.quiz-option[style*="border"]');
+                if (selectedOption && selectedOption.innerHTML.includes('yes/no questions')) {
+                    selectedOption.style.backgroundColor = 'rgba(0, 230, 161, 0.2)';
+                    alert('Correct! Decision trees use simple yes/no questions to narrow down possibilities and make decisions!');
+                } else if (selectedOption) {
+                    selectedOption.style.backgroundColor = 'rgba(255, 99, 71, 0.2)';
+                    alert('Not quite! Try again!');
+                } else {
+                    alert('Please select an answer first!');
+                }
+            });
+            
+            // Character interaction
+            const character = document.querySelector('.character');
+            character.addEventListener('click', function() {
+                alert('Hi! I\'m Bit, your AI friend! Decision trees are like playing a guessing game. They ask questions to narrow down possibilities until they find the right answer!');
+            });
+        });
+    </script>
+</body>
+</html>
